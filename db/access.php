@@ -15,21 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local mlang remover.
+ * Moodle Edit Translations Permissions
  *
- * @package    local_mlangremover
- * @copyright  2024 Bruno Baudry <bruno.baudry@bfh.ch>
+ * Adds local/deepler:eddittranslations permissions for checking against
+ * the webservice.
+ *
+ * @package    local_deepler
+ * @copyright  2022 Kaleb Heitzman <kaleb@jamfire.io>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @see        https://docs.moodle.org/dev/version.php
+ * @see        https://docs.moodle.org/dev/Access_API
  */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin = new stdClass();
-$plugin->component = 'local_mlangremover'; // Full name of the plugin (used for diagnostics).
-$plugin->version = 2024110402; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires = 2020112800; // Requires Moodle 4.1 LTS.
-$plugin->supported = [402, 404]; // Supported Moodle Versions.
-$plugin->maturity = MATURITY_ALPHA; // Maturity level.
-$plugin->release = 'v0.0.1'; // Semantic Versioning for CHANGES.md.
-// Dependencies.
-$plugin->dependencies = ['filter_multilang2' => 2020101300];
+
+// Translator Capabilities.
+$capabilities = [
+        'local/mlangremover:deletetranslations' => [
+                'captype' => 'write',
+                'riskbitmaskt' => 'RISK_CONFIG',
+                'contextlevel' => CONTEXT_SYSTEM,
+                'archetypes' => ['manager' => CAP_ALLOW],
+        ],
+];

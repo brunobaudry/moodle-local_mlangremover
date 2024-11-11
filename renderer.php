@@ -14,22 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace local_mlangremover\output;
+
+use plugin_renderer_base;
+
 /**
- * Local mlang remover.
+ * Local mlang remover Renderer.
  *
  * @package    local_mlangremover
- * @copyright  2024 Bruno Baudry <bruno.baudry@bfh.ch>
+ * @copyright  2022 Kaleb Heitzman <kaleb@jamfire.io>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @see        https://docs.moodle.org/dev/version.php
+ * @see        https://docs.moodle.org/dev/Output_API
  */
+class renderer extends plugin_renderer_base {
 
-defined('MOODLE_INTERNAL') || die();
-$plugin = new stdClass();
-$plugin->component = 'local_mlangremover'; // Full name of the plugin (used for diagnostics).
-$plugin->version = 2024110402; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires = 2020112800; // Requires Moodle 4.1 LTS.
-$plugin->supported = [402, 404]; // Supported Moodle Versions.
-$plugin->maturity = MATURITY_ALPHA; // Maturity level.
-$plugin->release = 'v0.0.1'; // Semantic Versioning for CHANGES.md.
-// Dependencies.
-$plugin->dependencies = ['filter_multilang2' => 2020101300];
+    /**
+     * Render Translate Content Page.
+     *
+     * @param object $page
+     * @return string
+     */
+    public function render_remove_mlangs_page($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('local_mlangremover/remove_mlangs_page', $data);
+    }
+}

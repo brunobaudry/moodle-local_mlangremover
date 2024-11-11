@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local mlang remover.
+ * Local Course Translator.
  *
  * @package    local_mlangremover
  * @copyright  2024 Bruno Baudry <bruno.baudry@bfh.ch>
@@ -23,13 +23,5 @@
  * @see        https://docs.moodle.org/dev/version.php
  */
 
-defined('MOODLE_INTERNAL') || die();
-$plugin = new stdClass();
-$plugin->component = 'local_mlangremover'; // Full name of the plugin (used for diagnostics).
-$plugin->version = 2024110402; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires = 2020112800; // Requires Moodle 4.1 LTS.
-$plugin->supported = [402, 404]; // Supported Moodle Versions.
-$plugin->maturity = MATURITY_ALPHA; // Maturity level.
-$plugin->release = 'v0.0.1'; // Semantic Versioning for CHANGES.md.
-// Dependencies.
-$plugin->dependencies = ['filter_multilang2' => 2020101300];
+$string['pluginname'] = '{mlang} Remover';
+$string['mlangremover:deletetranslations'] = 'Delete translations and remove {mlang} tags';
