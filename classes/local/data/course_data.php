@@ -402,14 +402,14 @@ class course_data {
         $activity->modname = 'question';
         $activity->section = $act->sectionid;
         $activitydata[] = $this->build_data(
-                $activity->id,
+                $question->id,
                 $question->name,
                 0,
                 'name',
                 $activity
         );
         $activitydata[] = $this->build_data(
-                $activity->id,
+                $question->id,
                 $question->questiontext,
                 1,
                 'questiontext',
@@ -417,7 +417,7 @@ class course_data {
         );
         if (!empty($question->generalfeedback)) {
             $activitydata[] = $this->build_data(
-                    $activity->id,
+                    $question->id,
                     $question->generalfeedback,
                     1,
                     'generalfeedback',
@@ -428,6 +428,7 @@ class course_data {
         $qactivity->id = $act->id;
         $qactivity->modname = 'question_answers';
         $qactivity->section = $act->sectionid;
+        $qactivity->parent = $question->id;
         switch ($question->qtype->name()) {
             case 'multichoice':
                 $rank = 0;

@@ -73,7 +73,10 @@ class update_translation extends external_api {
             self::validate_context($context);
             require_capability('local/mlangremover:deletetranslations', $context);
             // Check detailed activity capabilities.
-            require_capability('moodle/course:manageactivities', \context_module::instance($data['id']));
+            if ($data['table'] !== 'course' && $data['table'] !== 'course_sections' &&
+                    strpos($data['table'], 'question') === false) {
+                require_capability('moodle/course:manageactivities', \context_module::instance($data['id']));
+            }
             // Update the record.
             $dataobject = [];
             $dataobject['id'] = $data['id'];
