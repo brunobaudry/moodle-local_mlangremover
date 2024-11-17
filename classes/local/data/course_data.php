@@ -242,10 +242,41 @@ class course_data {
                     case 'wiki':
                         include_once($CFG->dirroot . '/mod/wiki/locallib.php');
                         $wikis = wiki_get_subwikis($activitydbrecord->id);
+
                         foreach ($wikis as $wid => $wiki) {
-                            $firstpage = wiki_get_first_page($wid);
-                            $this->injectwikipage($activitydata, $firstpage, $activity->section);
+                            $pages = wiki_get_page_list($wid);
+                            $pagesorphaned = array_map(function($op) {
+                                return $op->id;
+                            }, wiki_get_orphaned_pages($wid));
+                            foreach ($pages as $p) {
+                                if (!in_array($p->id, $pagesorphaned)) {
+                                    $this->injectwikipage($activitydata, $p, $activity);
+                                }
+                            }
+
                         }
+                        break;
+                        break;
+                    case 'quiz':
+                        // Get quiz questions
+                        $quizsettings = \quiz::create($activity->instance);
+                        $structure = \mod_quiz\structure::create_for_quiz($quizsettings);
+                        $slots = $structure->get_slots();
+                        foreach ($slots as $slot) {
+                            $question = \question_bank::load_question($slot->questionid);
+                            $this->injectquizcontent($activitydata, $question, $activity);
+                        }
+                        break;
+                    case 'moodleoverflow':
+                        include_once($CFG->dirroot . '/mod/moodleoverflow/locallib.php');
+                        $discussion = moodleoverflow_get_discussions($activity);
+                        // @todo parse discussions
+                        break;
+                    case 'hotquestion':
+                        include_once($CFG->dirroot . '/mod/hotquestion/locallib.php');
+                        $hq = new \mod_hotquestion($activity->id);
+                        // @todo parse hot questions
+                        $questions = $hq->get_questions();
                         break;
                 }
             }
@@ -297,11 +328,12 @@ class course_data {
      * @return void
      * @throws \dml_exception
      */
-    private function injectwikipage(array &$activities, mixed $chapter, int $section) {
+    private function injectwikipage(array &$activities, mixed $chapter, \cm_info $act) {
         global $DB;
         $activity = new \stdClass();
+        $activity->id = $act->id;
         $activity->modname = 'wiki_pages';
-        $activity->section = $section;
+        $activity->section = $act->sectionid;
         // Need to make sure the activity content is blank so that it is not replaced in the hacky get_file_url.
         $activity->content = '';
         // Wiki pages have title and cachedcontent.
@@ -362,6 +394,129 @@ class course_data {
             }
         }
         return $activitydbrecord;
+    }
+
+    private function injectquizcontent(array &$activitydata, \question_definition $question, mixed $act) {
+        $activity = new \stdClass();
+        $activity->id = $act->id;
+        $activity->modname = 'question';
+        $activity->section = $act->sectionid;
+        $activitydata[] = $this->build_data(
+                $activity->id,
+                $question->name,
+                0,
+                'name',
+                $activity
+        );
+        $activitydata[] = $this->build_data(
+                $activity->id,
+                $question->questiontext,
+                1,
+                'questiontext',
+                $activity
+        );
+        if (!empty($question->generalfeedback)) {
+            $activitydata[] = $this->build_data(
+                    $activity->id,
+                    $question->generalfeedback,
+                    1,
+                    'generalfeedback',
+                    $activity
+            );
+        }
+        $qactivity = new \stdClass();
+        $qactivity->id = $act->id;
+        $qactivity->modname = 'question_answers';
+        $qactivity->section = $act->sectionid;
+        switch ($question->qtype->name()) {
+            case 'multichoice':
+                $rank = 0;
+                foreach ($question->answers as $answer) {
+                    $rank++;
+                    $activitydata[] = $this->build_data(
+                            $answer->id,
+                            $answer->answer,
+                            $answer->answerformat,
+                            'answer',
+                            $qactivity
+                    );
+                    if (!empty($answer->feedback)) {
+                        $activitydata[] = $this->build_data(
+                                $answer->id,
+                                $answer->feedback,
+                                $answer->feedbackformat,
+                                'feedback',
+                                $qactivity
+                        );
+                    }
+                }
+                break;
+            /*  case 'truefalse':
+                  if (!empty($question->truefeedback)) {
+                      $activitydata[] = $this->build_data(
+                              $question->id,
+                              $question->truefeedback,
+                              $question->truefeedbackformat,
+                              'truefeedback',
+                              $activity
+                      );
+                  }
+                  if (!empty($question->falsefeedback)) {
+                      $activitydata[] = $this->build_data(
+                              $question->id,
+                              $question->falsefeedback,
+                              $question->falsefeedbackformat,
+                              'falsefeedback',
+                              $activity
+                      );
+                  }
+
+                  break;
+              case 'match':
+                  foreach ($question->subquestions as $subq) {
+                      $data['textfields'][] = [
+                              'id' => 'quiz_question_subq_' . $subq->id,
+                              'name' => $cm->name . ' - ' . $question->name . ' (Subquestion)',
+                              'content' => $subq->questiontext
+                      ];
+                      $data['textfields'][] = [
+                              'id' => 'quiz_question_subq_answer_' . $subq->id,
+                              'name' => $cm->name . ' - ' . $question->name . ' (Subquestion Answer)',
+                              'content' => $subq->answertext
+                      ];
+                  }
+                  break;
+              case 'essay':
+                  if (!empty($question->graderinfo)) {
+                      $data['textfields'][] = [
+                              'id' => 'quiz_question_graderinfo_' . $question->id,
+                              'name' => $cm->name . ' - ' . $question->name . ' (Grader Info)',
+                              'content' => $question->graderinfo
+                      ];
+                  }
+                  break;
+              case 'shortanswer':
+              case 'numerical':
+                  foreach ($question->answers as $answer) {
+                      $data['textfields'][] = [
+                              'id' => 'quiz_question_answer_' . $answer->id,
+                              'name' => $cm->name . ' - ' . $question->name . ' (Answer)',
+                              'content' => $answer->answer
+                      ];
+                      if (!empty($answer->feedback)) {
+                          $data['textfields'][] = [
+                                  'id' => 'quiz_question_feedback_' . $answer->id,
+                                  'name' => $cm->name . ' - ' . $question->name . ' (Answer Feedback)',
+                                  'content' => $answer->feedback
+                          ];
+                      }
+                  }
+                  break;*/
+            default:
+                // Log or handle unknown question types
+                debugging('Unhandled question type: ' . $question->qtype->name(), DEBUG_DEVELOPER);
+                break;
+        }
     }
 
     /**
