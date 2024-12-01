@@ -31,7 +31,7 @@ jobs:
           tag: "v${{ env.VERSION }}"
           draft: false
           regex: "/^Release: v(\\d+\\.\\d+\\.\\d+)$/i"
-          changelog: CHANGELOG.md
+          changelog: CHANGES.md
           changelog-entry: ${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
