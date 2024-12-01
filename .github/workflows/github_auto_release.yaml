@@ -1,13 +1,38 @@
-- name: Set version
-  run: |
-    VERSION=$(echo ${{ github.ref }} | sed 's/refs\/tags\/v//')
-    echo "VERSION=$VERSION" >> $GITHUB_ENV
+name: AutoRelease
 
-- uses: CupOfTea696/gh-action-auto-release@v1.0.3
-  with:
-    title: "Release: ${{ env.VERSION }}"
-    tag: "v${{ env.VERSION }}"
-    draft: false
-    regex: "/^Release: v(\\d+\\.\\d+\\.\\d+)$/i"
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get version from commit message
+        id: get_version
+        run: |
+          VERSION=$(git log -1 --pretty=%B | grep -oP 'Release: v\K(\d+\.\d+\.\d+)')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Auto Release
+        uses: CupOfTea696/gh-action-auto-release@v1.0.3
+        with:
+          title: "Release: ${{ env.VERSION }}"
+          tag: "v${{ env.VERSION }}"
+          draft: false
+          regex: "/^Release: v(\\d+\\.\\d+\\.\\d+)$/i"
+          changelog: CHANGELOG.md
+          changelog-entry: ${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output Release URL
+        if: steps.auto_release.outputs.released == 'true'
+        run:
+          echo "Release URL: ${{ steps.auto_release.outputs.release_url }}"
