@@ -32,7 +32,3 @@ jobs:
           changelog-entry: ${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Output Release URL
-        if: steps.auto_release.outputs.released == 'true'
-        run:
-          echo "Release URL: ${{ steps.auto_release.outputs.release_url }}"
