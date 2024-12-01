@@ -1,19 +1,13 @@
-name: AutoRelease
+- name: Set version
+  run: |
+    VERSION=$(echo ${{ github.ref }} | sed 's/refs\/tags\/v//')
+    echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: CupOfTea696/gh-action-auto-release@v1.0.2
-        with:
-          title: "Release: $version"
-          tag: "v$semver"
-          draft: false
-          regex: "/^Release: v(\\d+\\.\\d+\\.\\d+)$/i"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+- uses: CupOfTea696/gh-action-auto-release@v1.0.3
+  with:
+    title: "Release: ${{ env.VERSION }}"
+    tag: "v${{ env.VERSION }}"
+    draft: false
+    regex: "/^Release: v(\\d+\\.\\d+\\.\\d+)$/i"
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
