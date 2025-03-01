@@ -44,6 +44,7 @@ class update_translation extends external_api {
                             //'tid' => new external_value(PARAM_INT, 'The id of the timestamp table'),
                                 'table' => new external_value(PARAM_ALPHANUMEXT, 'The table name'),
                                 'field' => new external_value(PARAM_ALPHANUMEXT, 'The field name'),
+                                'cmid' => new external_value(PARAM_RAW, 'The course module id'),
                                 'text' => new external_value(PARAM_RAW, 'The new text content with multilang2 translations'),
                         ])
                 ),
@@ -75,7 +76,7 @@ class update_translation extends external_api {
             // Check detailed activity capabilities.
             if ($data['table'] !== 'course' && $data['table'] !== 'course_sections' &&
                     strpos($data['table'], 'question') === false) {
-                require_capability('moodle/course:manageactivities', \context_module::instance($data['id']));
+                require_capability('moodle/course:manageactivities', \context_module::instance($data['cmid']));
             }
             // Update the record.
             $dataobject = [];

@@ -61,6 +61,7 @@ class remove_mlangs_page implements renderable, templatable {
      * All the mlang tags used in the course.
      * */
     private array $mlangtags;
+    private \filter_multilang2 $mlangfilter;
 
     /**
      * Class Construct.
@@ -71,6 +72,7 @@ class remove_mlangs_page implements renderable, templatable {
      */
     public function __construct(\stdClass $course, array $coursedata, \filter_multilang2 $mlangfilter, array $mlangtags,
             string $version) {
+        $this->mlangfilter = $mlangfilter;
         $this->pluginversion = $version;
         $this->course = $course;
         $this->coursedata = $coursedata;

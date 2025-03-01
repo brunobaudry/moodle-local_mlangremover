@@ -43,6 +43,7 @@ class get_field extends external_api {
                                 'id' => new external_value(PARAM_INT, 'The id of the course field'),
                                 'table' => new external_value(PARAM_ALPHANUMEXT, 'The id of the activity table'),
                                 'field' => new external_value(PARAM_ALPHANUMEXT, 'The id of the activity table field'),
+                                'cmid' => new external_value(PARAM_ALPHANUMEXT, 'course module id'),
                         ])
                 ),
         ]);
@@ -72,7 +73,7 @@ class get_field extends external_api {
             // Check detailed activity capabilities.
             if ($data['table'] !== 'course' && $data['table'] !== 'course_sections' &&
                     strpos($data['table'], 'question') === false) {
-                require_capability('moodle/course:manageactivities', \context_module::instance($data['id']));
+                require_capability('moodle/course:manageactivities', \context_module::instance($data['cmid']));
             }
             // Get the original record.
             $record = (array) $DB->get_record($data['table'], ['id' => $data['id']]);

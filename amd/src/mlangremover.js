@@ -27,7 +27,7 @@ let tempTranslations = {};
 let config = {};
 let letsdobutton = {};
 let checkboxes = [];
-//let mlangContainer = {};
+// Let mlangContainer = {};
 let selectedLanguages = [];
 let allMLangs = [];
 let removalMethod = '';
@@ -75,7 +75,7 @@ const registerUI = () => {
         document.querySelector(Selectors.actions.selectAllBtn).checked = false;
         allMLangs = Array.from(document.querySelectorAll(Selectors.statuses.allMLangCkboxes));
         log(allMLangs, allMLangs.length);
-        //mlangContainer = document.querySelector(Selectors.statuses.selectedMlangsContainer);
+        // MlangContainer = document.querySelector(Selectors.statuses.selectedMlangsContainer);
         letsdobutton = document.querySelector(Selectors.actions.letsdobutton);
         checkboxes = document.querySelectorAll(Selectors.actions.checkBoxes);
         // Initialise status object.
@@ -139,8 +139,8 @@ export const init = (cfg) => {
  */
 const saveToDB = (key) => {
     warn('WTF ?!?');
-    //return;
-    const regex = /(\w+)\[(\d+)\]\[(\w+)\]/;
+    // Return;
+    const regex = /(\w+)\[(\d+)\]\[(\w+)\]\[(\d+)\]/;
     const matches = key.match(regex);
     if (!matches) {
         throw `key ${key} did not match `;
@@ -148,6 +148,7 @@ const saveToDB = (key) => {
     let id = matches[2];
     let table = matches[1];
     let field = matches[3];
+    let cmid = matches[4];
     // Get processing vars.
     // Restore the source.
     let updatedtext = tempTranslations[key].new;
@@ -158,8 +159,9 @@ const saveToDB = (key) => {
     fielddata.id = parseInt(id);
     fielddata.table = table;
     fielddata.field = field;
+    fielddata.cmid = cmid;
     info(fielddata);
-    //warn(sourceTokenised);
+    // Warn(sourceTokenised);
     // Get the latest data to parse text against.
 
     ajax.call([
@@ -180,24 +182,25 @@ const saveToDB = (key) => {
                             .replace("<KEY>", key));
                     // Get the updated text
                     // @todo here operate the removals
-                    //let updatedtext = getupdatedtext(fieldtext, text, sourceText, tempTranslations[key].sourceLang);
-                    //let updatedtext = fieldtext;
+                    // let updatedtext = getupdatedtext(fieldtext, text, sourceText, tempTranslations[key].sourceLang);
+                    // let updatedtext = fieldtext;
 
                     // Build the data object
                     let tdata = {};
                     tdata.courseid = config.courseid;
                     tdata.id = parseInt(id);
-                    //tdata.tid = tid;
+                    // Tdata.tid = tid;
                     tdata.table = table;
                     tdata.field = field;
                     tdata.text = updatedtext;
+                    tdata.cmid = cmid;
                     info(tdata);
                     // Success Message
                     const successMessage = () => {
                         log("SUCCES");
-                        //element.classList.add("local_deepler__success");
+                        // Element.classList.add("local_deepler__success");
                         // Add saved indicator
-                        //setIconStatus(key, Selectors.statuses.success);
+                        // setIconStatus(key, Selectors.statuses.success);
                         // Remove success message after a few seconds
                         /* setTimeout(() => {
                              let multilangPill = document.querySelector(replaceKey(Selectors.statuses.multilang, key));

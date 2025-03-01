@@ -25,3 +25,9 @@
 
 $string['pluginname'] = '{mlang} Remover';
 $string['mlangremover:deletetranslations'] = 'Delete translations and remove {mlang} tags';
+$string['selectall'] = 'Select all';
+$string['removetag'] = 'remove tag';
+$string['mlangtagsstring'] = 'Mlang tags';
+$string['letsdobutton'] = 'Lets do';
+$string['keepselected'] = 'Keep selected';
+$string['removeselected'] = 'Remove selected';

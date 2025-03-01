@@ -89,8 +89,8 @@ class remove_mlangs_form extends \moodleform {
         $fieldtextfiltered = $this->mlangfilter->filter($fieldtext);
         $languages = implode(' ', $item->get_languages());
         // Build a key for js interaction.
-        $key = "{$field->get_table()}[{$field->get_id()}][{$field->get_field()}]";
-        $keyid = "{$field->get_table()}-{$field->get_id()}-{$field->get_field()}";
+        $key = "{$field->get_table()}[{$field->get_id()}][{$field->get_field()}][{$field->get_cmid()}]";
+        $keyid = "{$field->get_table()}-{$field->get_id()}-{$field->get_field()}-{$field->get_cmid()}";
         // Open translation item.
         $mform->addElement('html',
                 "<div class='row align-items-start py-2' data-row-id='$key'>");
