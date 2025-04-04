@@ -20,45 +20,26 @@
  */
 export default {
     actions: {
-        checkBoxes: '[data-action="local_mlangremover/checkbox"]',
-        selectAllBtn: '[data-action="local_mlangremover/select-all"]',
-        letsdobutton: '[data-action="local_mlangremover/letsdobutton"]',
-        toggleMultilang: '#toggleMultilang',
-        removeRadios: '[name="local_mlangremover/removehow"]',
-        removehow: '[name="local_mlangremover/removehow"]:checked',
+        // CheckBoxes: '[data-action="local_mlangremover/checkbox"]', //
+        // selectAllBtn: '[data-action="local_mlangremover/select-all"]', // selectAllBtn
+        letsdobutton: '[data-action="local_mlangremover/letsdobutton"]', //
+        removeRadios: '[name="local_mlangremover/removehow"]', //
+        removehow: '[name="local_mlangremover/removehow"]:checked', //
     },
     statuses: {
-        checkedCheckBoxes: '[data-action="local_mlangremover/checkbox"]:checked',
-        successMessages: '[data-status="local_mlangremover/success-message"][data-key="<KEY>"]',
-        multilang: '[data-row-id="<KEY>"] span#toggleMultilang',
-        wait: 'local_mlangremover/wait',
-        totranslate: 'local_mlangremover/totranslate',
-        tosave: 'local_mlangremover/tosave',
-        failed: 'local_mlangremover/failed',
-        success: 'local_mlangremover/success',
-        saved: 'local_mlangremover/saved',
-        MlangsContainer: '#local_mlangremover__mlangtags',
-        allMLangCkboxes: '#local_mlangremover__mlangtags input[type="checkbox"]',
-        allMLangCkboxesNames: '[name="mlangsselected[]"]',
-        selectedMLangCkboxes: '#local_mlangremover__mlangtags input[type="checkbox"]:checked',
-        removetag: '#local_mlangremover__removetag',
+        // CheckedCheckBoxes: '[data-action="local_mlangremover/checkbox"]:checked', //
+        allMLangCkboxes: '#local_mlangremover__mlangtags input[type="checkbox"]', //
+        allMLangCkboxesNames: '[name="mlangsselected[]"]', //
+        selectedMLangCkboxes: '#local_mlangremover__mlangtags input[type="checkbox"]:checked', //
+        removetag: '#local_mlangremover__removetag', //
     },
     editors: {
-        textarea: '[data-action="local_mlangremover/textarea"',
-        iframes: '[data-action="local_mlangremover/editor"] iframe',
-        contentEditable: '[data-action="local_mlangremover/editor"] [contenteditable="true"]',
         multiples: {
-            checkBoxesWithKey: 'input[type="checkbox"][data-key="<KEY>"]',
-            editorChilds: '[data-action="local_mlangremover/editor"][data-key="<KEY>"] > *',
-            textAreasSource: 'div[data-sourcetext-key="<KEY>"]',
-            textAreasResults: 'div[data-result-key="<KEY>"]',
-            editorsWithKey: '[data-action="local_mlangremover/editor"][data-key="<KEY>"]',
-            contentEditableKeys: '[data-key="<KEY>"] [contenteditable="true"]'
+            textAreasResults: 'div[data-result-key="<KEY>"]', //
         },
     },
     sourcetexts: {
-        keys: '[data-sourcetext-key="<KEY>"]',
-        multilangs: '#<KEY>',
-        parentrow: '[data-row-id="<KEY>"]',
+        // Keys: '[data-sourcetext-key="<KEY>"]', //
+        parentrow: '[data-row-id="<KEY>"]', //
     }
 };
