@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 // Define edittranslation capability.
-define('LOCAL_DEEPLER_CAP', 'local/deepler:edittranslations');
+define('LOCAL_MLANGREMOVER_CAP', 'local/deepler:edittranslations');
 
 // Add functions for webservices.
 $functions = [
@@ -35,13 +35,13 @@ $functions = [
                 'description' => 'Update textfiield with new mlang tags',
                 'type' => 'write',
                 'ajax' => true,
-                'capabilities' => LOCAL_DEEPLER_CAP,
+                'capabilities' => LOCAL_MLANGREMOVER_CAP,
         ],
         'local_mlangremover_get_field' => [
                 'classname' => 'local_mlangremover\external\get_field',
                 'description' => 'Get field data',
                 'type' => 'read',
                 'ajax' => true,
-                'capabilities' => LOCAL_DEEPLER_CAP,
+                'capabilities' => LOCAL_MLANGREMOVER_CAP,
         ],
 ];
